@@ -6,6 +6,7 @@ import time
 
 sense = SenseHat()
 sense.set_rotation(180)
+sense.low_light = True
 sync_frequency = 30
 #Kingsbury, Preston Road
 trainStations = ['jubilee', '940GZZLUKBY'], ['metropolitan', '940GZZLUPRD']
@@ -69,7 +70,6 @@ def getStatus():
                 updates.append([json[0]['closureText'], json[0]['description']])
 
 def scroll(array):
-    sense.clear()
     if array != None:
         for item in array:
             print(item[0] + " will arrive at " + str(item[1]))
@@ -93,7 +93,6 @@ def calculateBlobs(time):
         return 0
     
 def draw(trains, buses):
-    sense.clear()
     toDraw = [
             [O,O,O,O,O,O,O,O],
             [O,O,O,O,O,O,O,O],
