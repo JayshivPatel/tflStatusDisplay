@@ -18,7 +18,7 @@ def getNext(stations, direction):
             for x in temp:
                 toReturn.append(x)
         else:
-            toReturn.append({line: 'Live Updates Unavailable'})
+            toReturn.append([line + ": updates unavailable", 0])
     return toReturn
 
 
@@ -30,24 +30,40 @@ def getFromAPI(line, stop, direction):
    else:
        returns = [] 
        for result in response.json():
-           returns.append({result['destinationName'] : int(result['timeToStation'] / 60)})
+           returns.append([line + ' to ' + result['destinationName'], int(result['timeToStation'] / 60)])
        return returns
 
 
-def getStatus(line):
-   response = requests.get('https://api.tfl.gov.uk/Line/' + line + '/Disruption')
-   if (response.status_code != 200):
-       displayError()
-   else:
-       json = response.json()
-       if len(json) == 0:
-           return ""
-       else:
-            return {json[0]['closureText'] : json[0]['description']}
+def getStatus():
+    updates = []
+    for line in trainStations:
+        response = requests.get('https://api.tfl.gov.uk/Line/' + line + '/Disruption')
 
+        if (response.status_code != 200):
+            displayError()
+        else:
+            json = response.json()
+            if len(json) != 0:
+                updates.append([json[0]['closureText'], json[0]['description']])
 
 def main():
-    print(getNext(trainStations, 'outbound'))
-    print(getNext(busStops, 'all'))
+    statuses = getStatus()
+    trains = getNext(trainStations, 'outbound')
+    buses = getNext(busStops, 'all')
+
+    trains.sort(key = lambda x: x[1])
+    buses.sort(key = lambda x: x[1])
+    
+    if (statuses != None):
+        for status in statuses:
+            print(status)
+    if (buses != None):
+        for bus in buses:
+            print(bus)
+    if (trains != None):
+        for train in trains:
+            print(train)
+
+
 main()
 
