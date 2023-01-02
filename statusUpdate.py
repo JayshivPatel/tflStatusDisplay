@@ -3,6 +3,7 @@ import requests
 from sense_hat import SenseHat
 from requests import ReadTimeout, ConnectTimeout, HTTPError, Timeout, ConnectionError
 import time
+import datetime
 
 sense = SenseHat()
 sense.set_rotation(180)
@@ -23,6 +24,8 @@ edgeware = [255, 0, 0]
 sudburyTown = [65, 105, 205]
 alperton = [255, 128, 0]
 O = [0,0,0]
+
+
 
 
 def displayError():
@@ -126,9 +129,18 @@ def draw(trains, buses):
 
     sense.set_pixels(transpose)
 
+
 def main():
     sense.clear()
     while True:
+        hour = datetime.datetime.now().hour
+        if hour > 10:
+            sense.clear()
+            time.sleep ((24 - hour) * 60 * 60)
+        if hour < 6:
+            sense.clear()
+            time.sleep ((6 - hour) * 60 * 60)
+
         statuses = getStatus()
         trains = getNext(trainStations, 'outbound')
         buses = getNext(busStops, 'all')
