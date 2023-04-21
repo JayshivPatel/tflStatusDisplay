@@ -133,13 +133,13 @@ def draw(trains, buses):
 def main():
     sense.clear()
     while True:
-        hour = datetime.datetime.now().hour
-        if hour > 10:
-            sense.clear()
-            time.sleep ((24 - hour) * 60 * 60)
-        if hour < 6:
-            sense.clear()
-            time.sleep ((6 - hour) * 60 * 60)
+        #hour = datetime.datetime.now().hour
+        #if hour > 10:
+        #    sense.clear()
+        #    time.sleep ((24 - hour) * 60 * 60)
+        #if hour < 6:
+        #    sense.clear()
+        #    time.sleep ((6 - hour) * 60 * 60)
 
         statuses = getStatus()
         trains = getNext(trainStations, 'outbound')
